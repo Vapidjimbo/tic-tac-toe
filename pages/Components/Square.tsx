@@ -85,7 +85,7 @@ export default function Square({
           -moz-box-shadow: 10px -1px 74px 10px rgba(19, 232, 254, 0.21);
         }
         button {
-          font-size: xx-large;
+          font-size: x-large;
           border: none;
           background: white;
           border-radius: 100px;
