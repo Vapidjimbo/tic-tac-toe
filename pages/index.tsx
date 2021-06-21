@@ -22,7 +22,7 @@ export default function Home() {
       <style jsx>{`
         h1 {
           color: #19dae6;
-          margin: 2em;
+          margin: .5em;
         }
 
         body {
