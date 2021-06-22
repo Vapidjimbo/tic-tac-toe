@@ -136,6 +136,11 @@ export default function Square({
 //PropTypes - React
 Square.propTypes = {
   checkTurn: PropTypes.func.isRequired,
+  gameOver: PropTypes.func,
   isXTurn: PropTypes.bool.isRequired,
-  squareId: PropTypes.string.isRequired,
-};
+  reset: PropTypes.bool,
+  setReset: PropTypes.func,
+  setSquareData: PropTypes.func,
+  squareData: PropTypes.any,
+  squareId: PropTypes.string.isRequired
+}

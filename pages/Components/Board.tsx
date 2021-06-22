@@ -6,9 +6,15 @@ import Square from "./Square";
 
 //Board Component
 
+//Types
+type Board = {
+  isMultiPlayerLocal: boolean;
+  isSinglePlayerLocal: boolean;
+}
+
 //Component
 
-export default function Board() {
+export default function Board({isMultiPlayerLocal, isSinglePlayerLocal}: Board) {
   //state
   const [isXTurn, setIsXTurn] = useState<boolean>(true),
     [squareData, setSquareData] = useState<any>({}),
@@ -115,8 +121,7 @@ export default function Board() {
   useEffect(() => {
     //objectLength = Object.keys(exampleObject).length
     console.log(Object.keys(squareData).length);
-    if(Object.keys(squareData).length === 9) {
-
+    if (Object.keys(squareData).length === 9) {
       setTurnText("Draw!");
     }
   }, [squareData]);
