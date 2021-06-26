@@ -2,22 +2,22 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import Link from 'next/link'
-import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useState } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const[isIndex, setIsIndex] = useState<boolean>(true);
-  const[indexBorder, setIndexBorder] = useState<string>('4px solid #19dae6');
-  const[multiBorder, setMultiBorder] = useState<string>('none');
+  const [indexBorder, setIndexBorder] = useState<string>("4px solid #19dae6");
+  const [multiBorder, setMultiBorder] = useState<string>("none");
 
-  let checkPage = () => {
-    isIndex ? setIsIndex(false) : setIsIndex(true);
-  }
+  let setIndex = () => {
+    setIndexBorder("4px solid #19dae6");
+    setMultiBorder("none");
+  };
 
-  useEffect(() => {
-    isIndex ? setIndexBorder('4px solid #19dae6') : setIndexBorder('none');
-    isIndex === false ? setMultiBorder('4px solid #19dae6') : setMultiBorder('none');
-  }, [isIndex]);
+  let setMulti = () => {
+    setMultiBorder("4px solid #19dae6");
+    setIndexBorder("none");
+  };
 
   return (
     <>
@@ -31,18 +31,22 @@ function MyApp({ Component, pageProps }: AppProps) {
           <ul>
             <li>
               <Link href="/">
-                <a id="single-player" onClick={checkPage}>Single Player</a>
+                <a id="single-player" onClick={setIndex}>
+                  Single Player
+                </a>
               </Link>
             </li>
             <li>
               <Link href="/multiplayer">
-                <a id="multi-player" onClick={checkPage}>Multiplayer</a>
+                <a id="multi-player" onClick={setMulti}>
+                  Multiplayer
+                </a>
               </Link>
             </li>
           </ul>
         </nav>
         <style jsx>{`
-          header{
+          header {
             color: #19dae6;
             font-size: medium;
             font-weight: bold;
@@ -68,7 +72,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           }
         `}</style>
       </header>
-      <Component {...pageProps} />
+      <div>
+        <Component {...pageProps} />
+      </div>
       <footer className={styles.footer}>
         By James Jamison &copy; 2021
         <style jsx>{`
