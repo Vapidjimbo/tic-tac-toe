@@ -1,20 +1,39 @@
-import Head from "next/head";
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import styles from "../styles/Home.module.css";
 import Square from "./Square";
 
 //Board Component
 
+//Types
+type Board = {
+  isMultiPlayerLocal: boolean;
+  isSinglePlayerLocal: boolean;
+};
+
 //Component
 
-export default function Board() {
+export default function Board({
+  isMultiPlayerLocal,
+  isSinglePlayerLocal,
+}: Board) {
   //state
   const [isXTurn, setIsXTurn] = useState<boolean>(true),
     [squareData, setSquareData] = useState<any>({}),
     [turnText, setTurnText] = useState<string>("X's Turn"),
     [gameOver, setGameOver] = useState<boolean>(false),
-    [reset, setReset] = useState<boolean>(false);
+    [reset, setReset] = useState<boolean>(false),
+    [disableClick, setDisableClick] = useState<string>(
+      "auto"
+    ),
+    [winCombos] = useState<any>([
+      [0, 1, 2],
+      [0, 3, 6],
+      [0, 4, 8],
+      [1, 4, 7],
+      [2, 5, 8],
+      [2, 4, 6],
+      [3, 4, 5],
+      [6, 7, 8],
+    ]);
 
   //methods
   const checkTurn = (): void => {
@@ -31,102 +50,69 @@ export default function Board() {
 
   useEffect(() => {
     isXTurn ? setTurnText("X's Turn") : setTurnText("O's Turn");
+    isXTurn && setDisableClick("auto");
+  }, [isXTurn]);
+
+  let botsTurn = () => {
+    let prevIndex = 0;
+    for (let i = 0; i < 9; i++) {
+      let index = randNum(prevIndex);
+      prevIndex = index;
+      if (squareData[index] === undefined) {
+        let square = document.getElementById(`${index}`);
+        square!.click();
+        break;
+      }
+    }
+  };
+
+  let randNum = (prevIndex: number): number => {
+    let number = 0;
+    let newIndex = false;
+    while(newIndex === false) {
+      number = Math.floor(Math.random() * 9);
+      if(number !== prevIndex) {
+        newIndex = true;
+        break;
+      }
+    }
+    return number;
+  };
+
+  useEffect(() => {
+    if (isSinglePlayerLocal && isXTurn === false) {
+      setDisableClick("none");
+    }
   }, [isXTurn]);
 
   useEffect(() => {
-    console.log(squareData);
-    //0,1,2; 0,3,6; 0,4,8
-    //1,4,7;
-    //2,5,8; 2,4,6
-    //3,4,5; 6,7,8
-    squareData[0] === "X" &&
-      squareData[1] === "X" &&
-      squareData[2] === "X" &&
-      setTurnText("X Wins!");
-    squareData[0] === "O" &&
-      squareData[1] === "O" &&
-      squareData[2] === "O" &&
-      setTurnText("O Wins!");
+    if (isSinglePlayerLocal && isXTurn === false) {
+      setTimeout(botsTurn, 500);
+    }
+  }, [isXTurn]);
 
-    squareData[0] === "X" &&
-      squareData[3] === "X" &&
-      squareData[6] === "X" &&
-      setTurnText("X Wins!");
-    squareData[0] === "O" &&
-      squareData[3] === "O" &&
-      squareData[6] === "O" &&
-      setTurnText("O Wins!");
-
-    squareData[0] === "X" &&
-      squareData[4] === "X" &&
-      squareData[8] === "X" &&
-      setTurnText("X Wins!");
-    squareData[0] === "O" &&
-      squareData[4] === "O" &&
-      squareData[8] === "O" &&
-      setTurnText("O Wins!");
-
-    squareData[1] === "X" &&
-      squareData[4] === "X" &&
-      squareData[7] === "X" &&
-      setTurnText("X Wins!");
-    squareData[1] === "O" &&
-      squareData[4] === "O" &&
-      squareData[7] === "O" &&
-      setTurnText("O Wins!");
-
-    squareData[2] === "X" &&
-      squareData[5] === "X" &&
-      squareData[8] === "X" &&
-      setTurnText("X Wins!");
-    squareData[2] === "O" &&
-      squareData[5] === "O" &&
-      squareData[8] === "O" &&
-      setTurnText("O Wins!");
-
-    squareData[2] === "X" &&
-      squareData[4] === "X" &&
-      squareData[6] === "X" &&
-      setTurnText("X Wins!");
-    squareData[2] === "O" &&
-      squareData[4] === "O" &&
-      squareData[6] === "O" &&
-      setTurnText("O Wins!");
-
-    squareData[3] === "X" &&
-      squareData[4] === "X" &&
-      squareData[5] === "X" &&
-      setTurnText("X Wins!");
-    squareData[3] === "O" &&
-      squareData[4] === "O" &&
-      squareData[5] === "O" &&
-      setTurnText("O Wins!");
-
-    squareData[6] === "X" &&
-      squareData[7] === "X" &&
-      squareData[8] === "X" &&
-      setTurnText("X Wins!");
-    squareData[6] === "O" &&
-      squareData[7] === "O" &&
-      squareData[8] === "O" &&
-      setTurnText("O Wins!");
+  useEffect(() => {
+    Object.keys(squareData).length === 9 && setTurnText("Draw!");
   }, [squareData]);
 
   useEffect(() => {
-    //objectLength = Object.keys(exampleObject).length
-    console.log(Object.keys(squareData).length);
-    if(Object.keys(squareData).length === 9) {
-
-      setTurnText("Draw!");
-    }
-  }, [squareData]);
+    winCombos.forEach((combo: any) => {
+      squareData[combo[0]] === "X" &&
+        squareData[combo[1]] === "X" &&
+        squareData[combo[2]] === "X" &&
+        setTurnText("X Wins!");
+      squareData[combo[0]] === "O" &&
+        squareData[combo[1]] === "O" &&
+        squareData[combo[2]] === "O" &&
+        setTurnText("O Wins!");
+    });
+  }, [squareData, winCombos]);
 
   useEffect(() => {
     turnText === "X Wins!" && setGameOver(true);
     turnText === "O Wins!" && setGameOver(true);
     turnText === "Draw!" && setGameOver(true);
   }, [turnText]);
-
   //jsx
   return (
     <>
@@ -140,7 +126,6 @@ export default function Board() {
             color: #19dae6;
         `}</style>
       </p>
-
       <div>
         {[...Array(9)].map((value: undefined, index: number) => (
           <Square
@@ -164,26 +149,23 @@ export default function Board() {
             max-width: 40%;
             max-height: auto;
             background: rgb(36, 36, 36);
+            pointer-events: ${disableClick};
           }
-
           @media only screen and (max-width: 880px) {
             div {
               min-width: 50%;
             }
           }
-
           @media only screen and (max-width: 688px) {
             div {
               min-width: 60%;
             }
           }
-
           @media only screen and (max-width: 576px) {
             div {
               min-width: 75%;
             }
           }
-
           @media only screen and (max-width: 460px) {
             div {
               min-width: 100%;
@@ -191,7 +173,6 @@ export default function Board() {
           }
         `}</style>
       </div>
-
       <button onClick={gameReset}>
         Reset Game
         <style jsx>{`

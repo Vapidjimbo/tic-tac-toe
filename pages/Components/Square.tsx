@@ -1,8 +1,5 @@
 import PropTypes from "prop-types";
-import Head from "next/head";
-import Image from "next/image";
-import { useEffect, useState, useReducer } from "react";
-import styles from "../styles/Home.module.css";
+import { useEffect, useState } from "react";
 
 //Square Child Component
 
@@ -47,7 +44,6 @@ export default function Square({
   let modifyContent = (event: any) => {
     let thisSquare = squareId;
     let squareClicked = event.target.id;
-
     if (squareClicked === thisSquare) {
       isXTurn ? setContent("X") : setContent("O");
       isXTurn
@@ -100,28 +96,24 @@ export default function Square({
           color: black;
           cursor: no-drop;
         }
-
         @media only screen and (max-width: 434px) {
           div {
             height: 11.5vh;
             width: 11.5vh;
           }
         }
-
         @media only screen and (max-width: 350px) {
           div {
             height: 10.5vh;
             width: 10.5vh;
           }
         }
-
         @media only screen and (max-width: 310px) {
           div {
             height: 9vh;
             width: 9vh;
           }
         }
-
         @media only screen and (max-width: 284px) {
           div {
             height: 8vh;
@@ -136,6 +128,11 @@ export default function Square({
 //PropTypes - React
 Square.propTypes = {
   checkTurn: PropTypes.func.isRequired,
+  gameOver: PropTypes.bool,
   isXTurn: PropTypes.bool.isRequired,
-  squareId: PropTypes.string.isRequired,
-};
+  reset: PropTypes.bool,
+  setReset: PropTypes.func,
+  setSquareData: PropTypes.func,
+  squareData: PropTypes.any,
+  squareId: PropTypes.string.isRequired
+}

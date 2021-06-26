@@ -1,12 +1,12 @@
 import styles from "../styles/Home.module.css";
 import Board from "./Components/Board";
 
-export default function Home() {
+export default function Multiplayer() {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
         <h1 className={styles.title}>Tic-Tac-Toe</h1>
-        <Board isMultiPlayerLocal={false} isSinglePlayerLocal={true} />
+        <Board isMultiPlayerLocal={true} isSinglePlayerLocal={false} />
       </main>
       <style jsx>{`
         h1 {
